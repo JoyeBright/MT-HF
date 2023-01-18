@@ -1,6 +1,16 @@
 # General (hyper)parameters
 params:
- seed: 777
+  seed: 777
+  src: en_XX
+  tgt: de_DE #zh_CN #de_DE
+  checkpoint: facebook/mbart-large-50
+  
+# Dataset setup
+dataset:
+  train_path: datasets/EN-DE/train.csv
+  dev_path: datasets/EN-DE/dev.csv
+  test_path: datasets/EN-DE/test.csv
+
 # MLFlow config
 mlflow:
   exp_name: EN-DE-MT
