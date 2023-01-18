@@ -27,13 +27,22 @@ class main():
     def load_dataset(self):
         """
         train, dev and test sets are loaded here
-        NB: the supported format is csv and no need for a header
+        The supported format and delimiter are CSV and '\t', respectively. 
+        Inputs need to have two columns that are labeled with 'src' and 'tgt'.
         """
         raw_datasets = load_dataset("csv", sep='\t', quoting=csv.QUOTE_NONE, data_files={
         "train": [self.cfg.dataset["train_path"]],
         "dev":   [self.cfg.dataset["dev_path"]],
         "test":  [self.cfg.dataset["test_path"]]})
         self.raw_datasets = raw_datasets
+    
+    def tokenize_function(self, example):
+        """
+        Taking src and tgt and tokenize them using the tokenizer
+        """
+        return self.tokenizer(example["src"], example["tgt"],
+        truncation=True, max_length=self.cfg.params["max_len"])
+    
 
 
         
