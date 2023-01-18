@@ -26,6 +26,11 @@ class main():
         # Apply tokenization function to the sample
         self.tokenized_datasets = self.raw_datasets.map(
             self.tokenize_function, batched=True)
+        # Remove the header (src and tgt) from the input
+        self.tokenized_datasets = self.tokenized_datasets.remove_columns(['src', 'tgt'])
+        # Set the format: torch
+        self.tokenized_datasets.set_format("torch")
+
 
     def load_dataset(self):
         """
@@ -41,7 +46,7 @@ class main():
     
     def tokenize_function(self, example):
         """
-        Taking src and tgt and tokenize them using the tokenizer
+        Taking src and tgt and tokenize them using the initialized tokenizer
         """
         return self.tokenizer(example["src"], example["tgt"],
         truncation=True, max_length=self.cfg.params["max_len"])
