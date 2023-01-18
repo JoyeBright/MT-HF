@@ -1,2 +1,7 @@
+# General (hyper)parameters
 params:
  seed: 777
+# MLFlow config
+mlflow:
+  exp_name: EN-DE-MT
+  params: "_1"

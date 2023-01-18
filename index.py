@@ -30,3 +30,6 @@ with open("config.yaml", "r") as file:
 cfg = Munch(cfg)
 # set some params
 set_seed(cfg.params["seed"])
+# MLflow setup
+os.environ["MLFLOW_EXPERIMENT_NAME"] = cfg.mlflow["exp_name"]
+os.environ["MLFLOW_FLATTEN_PARAMS"] = cfg.mlflow["params"]
