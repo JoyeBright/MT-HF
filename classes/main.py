@@ -23,6 +23,9 @@ class main():
             do_lower_case=self.cfg.params["lower_case"],
             normalization=self.cfg.params["normalization"]
         )
+        # Apply tokenization function to the sample
+        self.tokenized_datasets = self.raw_datasets.map(
+            self.tokenize_function, batched=True)
 
     def load_dataset(self):
         """
