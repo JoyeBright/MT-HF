@@ -22,3 +22,11 @@ from torch.utils.data import DataLoader
 from typing import Dict
 import matplotlib.pyplot as plt
 import evaluate
+
+# Loading the configuration file into cfg
+with open("config.yaml", "r") as file:
+    cfg = yaml.safe_load(file)
+# Converting dictionary to object
+cfg = Munch(cfg)
+# set some params
+set_seed(cfg.params["seed"])
