@@ -31,7 +31,6 @@ class main():
         # Set the format: torch
         self.tokenized_datasets.set_format("torch")
 
-
     def load_dataset(self):
         """
         train, dev and test sets are loaded here
@@ -50,6 +49,14 @@ class main():
         """
         return self.tokenizer(example["src"], example["tgt"],
         truncation=True, max_length=self.cfg.params["max_len"])
+    
+    def data_collator(self, tokenizer):
+        """
+         Forming batches by applying padding based on the max_length
+         NB: max_length can be set in the config file
+        """
+        data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
+        return data_collator
     
 
 
