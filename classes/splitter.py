@@ -13,9 +13,35 @@ class Splitter(Main):
         X_train, X_test, y_train, y_test = self.split(X, y)
         # The 2nd split to create dev set using the new train set
         X_train, X_dev, y_train, y_dev = self.split(X_train, y_train)
+        # Print out each split's length
         print("Train length:", len(X_train), len(y_train))
         print("Dev length:",   len(X_dev),   len(y_dev))
         print("Test length:",  len(X_test),  len(y_test))
+        # Create dataframes from each array
+        train = pd.DataFrame({'src': X_train, 'tgt':y_train})
+        dev = pd.DataFrame({'src': X_dev, 'tgt':y_dev})
+        test = pd.DataFrame({'src': X_test, 'tgt':y_test})
+        # Print out the dataframes
+        print(train)
+        print(dev)
+        print(test)
+        # Save the dataframes into a csv file
+        # Train
+        train.to_csv(
+            self.cfg.dataset['train_path'],
+            quoting=csv.QUOTE_NONE,
+            sep='\t', index=False)
+        # Dev
+        dev.to_csv(
+            self.cfg.dataset['dev_path'],
+            quoting=csv.QUOTE_NONE,
+            sep='\t', index=False)
+        # Test
+        test.to_csv(
+            self.cfg.dataset['test_path'],
+            quoting=csv.QUOTE_NONE,
+            sep='\t', index=False)
+
     def read_txt(self):
         """
         Reads the text file and load it in a dataframe
