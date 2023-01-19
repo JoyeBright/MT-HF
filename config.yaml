@@ -12,9 +12,14 @@ params:
   test_bs: 8 # test batch size per device
 # Dataset setup
 dataset:
-  train_path: datasets/EN-DE/train.csv
-  dev_path: datasets/EN-DE/dev.csv
-  test_path: datasets/EN-DE/test.csv
+  train_path: datasets/EN-FA/train.csv
+  dev_path: datasets/EN-FA/dev.csv
+  test_path: datasets/EN-FA/test.csv
+# Splitter setup
+splitter:
+  active: True
+  path: datasets/EN-FA/en-fa.txt
+  split: 0.003 
 # MLFlow config
 mlflow:
   exp_name: EN-DE-MT

@@ -1,22 +1,27 @@
-from transformers import (set_seed,
-                          Seq2SeqTrainingArguments, 
-                          EarlyStoppingCallback,
-                          Trainer,
-                          Seq2SeqTrainer,
-                          logging,
-                          DataCollatorForSeq2Seq,
-                          MBartForConditionalGeneration,
-                          MBart50TokenizerFast
+from transformers import (DataCollatorForSeq2Seq,
+                          MBart50TokenizerFast,
+                          set_seed
                          )
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 import csv
-import torch
+import yaml
+from munch import Munch
+import os
 
-class main():
-    def __init__(self, cfg):
-        # Loading the configuration file into cfg
-        self.cfg = cfg
+class Main:
+    def __init__(self):
+        # Loading the configuration file in cfg
+        with open("config.yaml", "r") as file:
+            cfg = yaml.safe_load(file)
+        # Converting dictionary to object
+        self.cfg = Munch(cfg)
+        # set some params
+        set_seed(self.cfg.params["seed"])
+        # MLflow setup
+        os.environ["MLFLOW_EXPERIMENT_NAME"] = self.cfg.mlflow["exp_name"]
+        os.environ["MLFLOW_FLATTEN_PARAMS"] = self.cfg.mlflow["params"]
+        PROJECT_NAME = self.cfg.mlflow["exp_name"] + self.cfg.mlflow["params"]
         # Defining the tokenizer
         self.tokenizer = MBart50TokenizerFast.from_pretrained(
             self.cfg.params["checkpoint"],
@@ -25,22 +30,6 @@ class main():
             do_lower_case=self.cfg.params["lower_case"],
             normalization=self.cfg.params["normalization"]
         )
-        # Apply tokenization function to the sample
-        self.tokenized_datasets = self.raw_datasets.map(
-            self.tokenize_function, batched=True)
-        # Remove the header (src and tgt) from the input
-        self.tokenized_datasets = self.tokenized_datasets.remove_columns(['src', 'tgt'])
-        # Set the format: torch
-        self.tokenized_datasets.set_format("torch")
-        # Call the data collator
-        self.data_collator = self.data_collator(self.tokenizer)
-        # Call the data loader
-        train_dataloader, dev_dataloader, test_dataloader = self.data_loader(self.tokenized_datasets, self.data_collator)
-        # Intialize the model
-        self.model = MBartForConditionalGeneration.from_pretrained(self.cfg.params["checkpoint"])
-        # Load the model in GPU (if available)
-        self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        self.model = self.model.to(self.device)
 
     def load_dataset(self):
         """

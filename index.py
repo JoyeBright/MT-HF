@@ -1,23 +1,33 @@
-from transformers import (set_seed)
-import yaml
-import os
-from munch import Munch
+from transformers import (MBartForConditionalGeneration)
 import pandas as pd
 import numpy as np
 from typing import Dict
-from classes.main import main
+from classes.main import Main
+from classes.splitter import Splitter
+import torch
 
-# Loading the configuration file into cfg
-with open("config.yaml", "r") as file:
-    cfg = yaml.safe_load(file)
-# Converting dictionary to object
-cfg = Munch(cfg)
-# set some params
-set_seed(cfg.params["seed"])
-# MLflow setup
-os.environ["MLFLOW_EXPERIMENT_NAME"] = cfg.mlflow["exp_name"]
-os.environ["MLFLOW_FLATTEN_PARAMS"] = cfg.mlflow["params"]
-PROJECT_NAME = cfg.mlflow["exp_name"] + cfg.mlflow["params"]
 # Creating an instance (named run) from the main class
-run = main(cfg)
+run = Main()
+# Split the text file into train, dev and test sets
+Splitter() 
+# Call load_dataset
+raw_datasets = run.load_dataset()
+# Apply tokenization function to the sample
+tokenized_datasets = run.raw_datasets.map(
+    run.tokenize_function, batched=True)
+# Remove the header (src and tgt) from the input
+tokenized_datasets = run.tokenized_datasets.remove_columns(['src', 'tgt'])
+# Set the format: torch
+tokenized_datasets.set_format("torch")
+# Call the data collator
+data_collator = run.data_collator(run.tokenizer)
+# Call the data loader
+train_dataloader, dev_dataloader, test_dataloader = run.data_loader(
+    run.tokenized_datasets, run.data_collator)
+# Intialize the model
+runmodel = MBartForConditionalGeneration.from_pretrained(run.cfg.params["checkpoint"])
+# Load the model in GPU (if available)
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+model = run.model.to(device)
+
 
