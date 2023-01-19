@@ -5,6 +5,9 @@ params:
   tgt: de_DE #zh_CN #de_DE
   checkpoint: facebook/mbart-large-50
   max_len: 100
+  train_bs: 8 # train batch-size per device
+  dev_bs: 8 # dev batch size per device
+  test_bs: 8 # test batch size per device
 # Dataset setup
 dataset:
   train_path: datasets/EN-DE/train.csv

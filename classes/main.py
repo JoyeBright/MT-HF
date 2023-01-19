@@ -9,6 +9,7 @@ from transformers import (set_seed,
                           MBart50TokenizerFast
                          )
 from datasets import load_dataset
+from torch.utils.data import DataLoader
 import csv
 
 class main():
@@ -30,6 +31,11 @@ class main():
         self.tokenized_datasets = self.tokenized_datasets.remove_columns(['src', 'tgt'])
         # Set the format: torch
         self.tokenized_datasets.set_format("torch")
+        # call the data collator
+        self.data_collator = self.data_collator(self.tokenizer)
+        # call the data loader
+        train_dataloader, dev_dataloader, test_dataloader = self.data_loader(self.tokenized_datasets, self.data_collator)
+
 
     def load_dataset(self):
         """
@@ -53,10 +59,32 @@ class main():
     def data_collator(self, tokenizer):
         """
          Forming batches by applying padding based on the max_length
-         NB: max_length can be set in the config file
+         NB: max_length can be set in the config file.
         """
         data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
         return data_collator
+
+    def data_loader(self, tokenized_datasets, data_collator):
+        """
+        Create batches from train, dev, and test sets
+        Batch size can be set in the config file.
+        """
+        train_dataloader = DataLoader(
+            tokenized_datasets["train"],
+            shuffle=True, batch_size=self.cfg.params["train_bs"],
+            collate_fn=data_collator
+        )
+        dev_dataloader = DataLoader(
+            tokenized_datasets["dev"],
+            batch_size=self.cfg.params["dev_bs"],
+            collate_fn=data_collator
+        )
+        test_dataloader = DataLoader(
+            tokenized_datasets["test"],
+            batch_size=self.cfg.params["test_bs"],
+            collate_fn=data_collator
+        )
+        return [train_dataloader, dev_dataloader, test_dataloader]
     
 
 
