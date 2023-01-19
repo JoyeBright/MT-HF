@@ -1,4 +1,3 @@
-from transformers import (MBartForConditionalGeneration)
 import pandas as pd
 import numpy as np
 from typing import Dict
@@ -26,10 +25,11 @@ def main():
     train_dataloader, dev_dataloader, test_dataloader = run.data_loader(
         tokenized_datasets, run.data_collator)
     # Intialize the model
-    runmodel = MBartForConditionalGeneration.from_pretrained(run.cfg.params["checkpoint"])
+    model = run.model
     # Load the model in GPU (if available)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model = run.model.to(device)
+    model = model.to(device)
+    print("You're using:", device)
 
 if __name__ == '__main__':
     main()
