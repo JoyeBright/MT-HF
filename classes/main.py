@@ -11,6 +11,7 @@ from transformers import (set_seed,
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 import csv
+import torch
 
 class main():
     def __init__(self, cfg):
@@ -31,17 +32,21 @@ class main():
         self.tokenized_datasets = self.tokenized_datasets.remove_columns(['src', 'tgt'])
         # Set the format: torch
         self.tokenized_datasets.set_format("torch")
-        # call the data collator
+        # Call the data collator
         self.data_collator = self.data_collator(self.tokenizer)
-        # call the data loader
+        # Call the data loader
         train_dataloader, dev_dataloader, test_dataloader = self.data_loader(self.tokenized_datasets, self.data_collator)
-
+        # Intialize the model
+        self.model = MBartForConditionalGeneration.from_pretrained(self.cfg.params["checkpoint"])
+        # Ship the model to GPU (if available)
+        self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        self.model = self.model.to(self.device)
 
     def load_dataset(self):
         """
         train, dev and test sets are loaded here
-        The supported format and delimiter are CSV and '\t', respectively. 
-        Inputs need to have two columns that are labeled with 'src' and 'tgt'.
+        CSV and '\t' are the supported format and delimiter, respectively. 
+        Inputs need to have two columns labeled with 'src' and 'tgt'.
         """
         raw_datasets = load_dataset("csv", sep='\t', quoting=csv.QUOTE_NONE, data_files={
         "train": [self.cfg.dataset["train_path"]],
@@ -58,8 +63,8 @@ class main():
     
     def data_collator(self, tokenizer):
         """
-         Forming batches by applying padding based on the max_length
-         NB: max_length can be set in the config file.
+        Forming batches by applying padding based on the max_length
+        NB: max_length can be set in the config file.
         """
         data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
         return data_collator
