@@ -38,7 +38,7 @@ class main():
         train_dataloader, dev_dataloader, test_dataloader = self.data_loader(self.tokenized_datasets, self.data_collator)
         # Intialize the model
         self.model = MBartForConditionalGeneration.from_pretrained(self.cfg.params["checkpoint"])
-        # Ship the model to GPU (if available)
+        # Load the model in GPU (if available)
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.model = self.model.to(self.device)
 
