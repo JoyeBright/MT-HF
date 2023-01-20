@@ -43,7 +43,7 @@ def main():
         callbacks=[EarlyStoppingCallback(early_stopping_patience=run.cfg.params["early_stop"])]
     )
     # Train
-    if run.cfg.MT["do_train"]==True:
+    if run.cfg.params["do_train"]==True:
         trainer.train()
     
 
