@@ -33,7 +33,6 @@ params:
   # eval metric
   metric_best_model: eval_loss
   predict_with_generate: True # Otherwise you get: out of range integral type conversion attempted
-
 # Dataset setup
 dataset:
   train_path: datasets/EN-FA/train.csv
