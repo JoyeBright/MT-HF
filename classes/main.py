@@ -22,7 +22,7 @@ class Main:
         # MLflow setup
         os.environ["MLFLOW_EXPERIMENT_NAME"] = self.cfg.mlflow["exp_name"]
         os.environ["MLFLOW_FLATTEN_PARAMS"] = self.cfg.mlflow["params"]
-        PROJECT_NAME = self.cfg.mlflow["exp_name"] + self.cfg.mlflow["params"]
+        self.PROJECT_NAME = self.cfg.mlflow["exp_name"] + self.cfg.mlflow["params"]
         # Defining the tokenizer
         self.tokenizer = MBart50TokenizerFast.from_pretrained(
             self.cfg.params["checkpoint"],

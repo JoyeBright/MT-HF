@@ -3,6 +3,7 @@ import numpy as np
 from typing import Dict
 from classes.main import Main
 from classes.splitter import Splitter
+from classes.args import Args
 import torch
 
 def main():
@@ -30,6 +31,9 @@ def main():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model = model.to(device)
     print("You're using:", device)
+    # Call the training arguments
+    training_args = Args().training_args
+    
 
 if __name__ == '__main__':
     main()
