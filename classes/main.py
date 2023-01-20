@@ -1,5 +1,6 @@
 from transformers import (DataCollatorForSeq2Seq,
                           MBart50TokenizerFast,
+                          MBartForConditionalGeneration,
                           set_seed
                          )
 from datasets import load_dataset
@@ -30,6 +31,9 @@ class Main:
             do_lower_case=self.cfg.params["lower_case"],
             normalization=self.cfg.params["normalization"]
         )
+        # Define the model
+        self.model = MBartForConditionalGeneration.from_pretrained(
+            self.cfg.params["checkpoint"])
 
     def load_dataset(self):
         """
