@@ -21,7 +21,7 @@ class Args(Main):
             push_to_hub=False,
             learning_rate=float(self.cfg.params["lr"]),
             evaluation_strategy= self.cfg.params["evaluation"],
-            eval_steps=self.cfg.params["eval_steps"], # evaluate and save every n steps
+            eval_steps=self.cfg.params["eval_steps"],
             load_best_model_at_end= self.cfg.params["best_model"],
             metric_for_best_model= self.cfg.params["metric_best_model"],
             do_train=self.cfg.params["do_train"],
@@ -29,4 +29,5 @@ class Args(Main):
             do_predict=self.cfg.params["do_predict"], 
             optim=self.cfg.params["optim"],
             predict_with_generate=self.cfg.params["predict_with_generate"],
+            use_mps_device=self.cfg.params["use_mps_device"]
         )

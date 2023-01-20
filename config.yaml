@@ -18,13 +18,14 @@ params:
   device_train_bs: 8
   device_eval_bs: 8
   epoch: 100
+   # log, save, and evaluate every n steps
   logging_step: 500
   save_steps: 500
-  eval_steps: 500
+  eval_steps: 500 
   save: 30
   weight_decay: 0
   warmup_steps: 0
-  fp16: True
+  fp16: False # only can be used on CUDA devices
   lr: 5e-06
   evaluation: steps
   best_model: True
@@ -33,6 +34,7 @@ params:
   # eval metric
   metric_best_model: eval_loss
   predict_with_generate: True # Otherwise you get: out of range integral type conversion attempted
+  use_mps_device: True # Using Apple Silicon chip
 # Dataset setup
 dataset:
   train_path: datasets/EN-FA/train.csv
