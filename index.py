@@ -1,9 +1,8 @@
-import pandas as pd
-import numpy as np
-from typing import Dict
 from classes.main import Main
 from classes.splitter import Splitter
+from classes.report import MySeq2SeqTrainer
 from classes.args import Args
+from transformers import EarlyStoppingCallback
 import torch
 
 def main():
@@ -33,6 +32,19 @@ def main():
     print("You're using:", device)
     # Call the training arguments
     training_args = Args().training_args
+    # Define the trainer (derived from MySeq2SeqTrainer)
+    trainer = MySeq2SeqTrainer(
+        model,
+        args=training_args,
+        train_dataset=tokenized_datasets["train"],
+        eval_dataset=tokenized_datasets["dev"],
+        data_collator=data_collator,
+        tokenizer=run.tokenizer,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=run.cfg.params["early_stop"])]
+    )
+    # Train
+    if run.cfg.MT["do_train"]==True:
+        trainer.train()
     
 
 if __name__ == '__main__':

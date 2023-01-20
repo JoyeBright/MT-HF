@@ -23,6 +23,7 @@ params:
   save_steps: 500
   eval_steps: 500 
   save: 30
+  early_stop: 5
   weight_decay: 0
   warmup_steps: 0
   fp16: False # only can be used on CUDA devices
