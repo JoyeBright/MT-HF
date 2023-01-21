@@ -46,12 +46,13 @@ class Main:
         "dev":   [self.cfg.dataset["dev_path"]],
         "test":  [self.cfg.dataset["test_path"]]})
         self.raw_datasets = raw_datasets
+        return raw_datasets
     
     def tokenize_function(self, example):
         """
         Taking src and tgt and tokenize them using the initialized tokenizer
         """
-        return self.tokenizer(example["src"], example["tgt"],
+        return self.tokenizer(example["src"], text_target=example["tgt"],
         truncation=True, max_length=self.cfg.params["max_len"])
     
     def data_collator(self, tokenizer):

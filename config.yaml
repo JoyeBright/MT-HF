@@ -5,7 +5,7 @@ params:
   do_eval: True
   do_predict: True
   src: en_XX # See https://huggingface.co/facebook/mbart-large-50
-  tgt: de_DE # See https://huggingface.co/facebook/mbart-large-50
+  tgt: fa_IR # See https://huggingface.co/facebook/mbart-large-50
   lower_case: True # Tokenizer
   normalization: True # Tokenizer
   checkpoint: facebook/mbart-large-50
@@ -17,11 +17,11 @@ params:
   # bs per device
   device_train_bs: 8
   device_eval_bs: 8
-  epoch: 100
+  epoch: 2
    # log, save, and evaluate every n steps
-  logging_step: 500
-  save_steps: 500
-  eval_steps: 500 
+  logging_step: 1000
+  save_steps: 1000
+  eval_steps: 1000
   save: 30
   early_stop: 5
   weight_decay: 0
@@ -48,5 +48,5 @@ splitter:
   split: 0.003 
 # MLFlow config
 mlflow:
-  exp_name: EN-DE-MT
+  exp_name: EN-FA-MT
   params: "_1"

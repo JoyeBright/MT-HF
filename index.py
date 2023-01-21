@@ -2,8 +2,14 @@ from classes.main import Main
 from classes.splitter import Splitter
 from classes.report import MySeq2SeqTrainer
 from classes.args import Args
+from classes.eval import Eval
 from transformers import EarlyStoppingCallback
+import evaluate
 import torch
+import numpy as np
+# Disable tokenizer_parallelism error
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 def main():
     # Creating an instance (named run) from the main class
@@ -13,7 +19,7 @@ def main():
     # Call load_dataset
     raw_datasets = run.load_dataset()
     # Apply tokenization function to the sample
-    tokenized_datasets = run.raw_datasets.map(
+    tokenized_datasets = raw_datasets.map(
         run.tokenize_function, batched=True)
     # Remove the header (src and tgt) from the input
     tokenized_datasets = tokenized_datasets.remove_columns(['src', 'tgt'])
@@ -40,13 +46,13 @@ def main():
         eval_dataset=tokenized_datasets["dev"],
         data_collator=data_collator,
         tokenizer=run.tokenizer,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=run.cfg.params["early_stop"])]
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=run.cfg.params["early_stop"])],
+        compute_metrics=Eval.compute_metric
     )
     # Train
     if run.cfg.params["do_train"]==True:
         trainer.train()
     
-
 if __name__ == '__main__':
     main()
 
