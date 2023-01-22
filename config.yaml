@@ -26,11 +26,11 @@ params:
   early_stop: 5
   weight_decay: 0
   warmup_steps: 0
-  fp16: False # only can be used on CUDA devices
+  fp16: False # Only can be used on CUDA devices
   lr: 5e-06
   evaluation: steps
   best_model: True
-  optim: adafactor  #adafactor, adamw_torch default:adamw_hf
+  optim: adafactor  # adafactor, adamw_torch default:adamw_hf
   hidden_dropout_prob: 0.1
   # eval metric
   metric_best_model: eval_loss
@@ -41,6 +41,7 @@ dataset:
   train_path: datasets/EN-FA/train.csv
   dev_path: datasets/EN-FA/dev.csv
   test_path: datasets/EN-FA/test.csv
+  predict_path: datasets/EN-FA/en-fa.txt # Inference
 # Splitter setup
 splitter:
   active: True
