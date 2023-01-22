@@ -1,5 +1,5 @@
 # MT-HF
-A Machine Translation (MT) engine that utilizes a pre-trained model from HuggingFace (HF) called mBART-50.
+A Machine Translation engine that utilizes a pre-trained model from HuggingFace, specifically the mBART-50 model.
 # How to use:
 1. If you don't have conda installed on your machine, install it by following the instructions at this link: <br> https://docs.conda.io/projects/conda/en/latest/user-guide/install/<br>
 2. Create a new environment and install the required packages by running the command:<br>
